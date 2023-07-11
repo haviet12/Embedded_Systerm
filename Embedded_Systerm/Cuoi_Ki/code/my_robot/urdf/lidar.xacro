@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot_name">
+    <joint name="laser_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="laser_frame"/>
+        <origin xyz="0.1 0.0 0.109" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <link name="laser_frame">
+        <visual>
+            <geometry>
+               <cylinder radius="0.02" length="0.02"/>
+            </geometry>
+
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+
+            <material name="red">
+                <color rgba="1.0 0.0 0.0 1.0"/>
+            </material>
+        </visual>
+
+        <inertial>
+            <mass value="0.1"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <inertia ixx="0.000975" ixy="0.0" ixz="0.0" iyy="0.000975" iyz="0.0" izz="0.0018"/>
+        </inertial>
+
+        <collision>
+            <geometry>
+                <cylinder radius="0.02" length="0.02"/> 
+            </geometry>
+
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </collision>
+    </link>
+
+    <gazebo reference="laser_frame">
+        <material>Gazebo/Red</material>
+        <sensor name="laser" type="ray">
+            <pose>0 0 0 0 0 0</pose>
+            <!-- set true to visible false to unvisible -->
+            <visualize>true</visualize> 
+            <update_rate>40</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14</min_angle>
+                        <max_angle>3.14</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.3</min>
+                    <max>12.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+
+            <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
+                <topicName>/laser/scan</topicName>
+                <frameName>laser_frame</frameName>
+            </plugin>
+
+        </sensor>
+    </gazebo>
+</robot>

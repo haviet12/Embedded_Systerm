@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="my_robot">
+
+    <xacro:property name="pi" value="3.14"/>
+    
+    <!-- BASE LINK -->
+    <link name="base_link">
+    </link>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis_link"/>
+        <origin xyz="-0.05 0.0 0.0"/>
+    </joint>
+
+    <!-- CHASSIS LINK -->
+    <link name="chassis_link"> 
+        <visual>
+            <geometry>
+                <box size="0.2 0.142 0.1"/>
+            </geometry>
+
+            <origin xyz="0.1 0.0 0.05" rpy="0.0 0.0 0.0"/>
+    
+            <material name="white">
+                <color rgba="1.0 1.0 1.0 1.0"/>
+            </material>
+        </visual>
+        <inertial>
+            <mass value="4.0"/>
+            <origin xyz="0.1 0.0 0.05" rpy="0.0 0.0 0.0"/>
+            <inertia ixx="0.009375" ixy="0.0" ixz="0.0" iyy="0.0152" iyz="0.0" izz="0.0208"/>
+        </inertial>
+        <collision>
+            <geometry>
+                <box size="0.2 0.142 0.1"/>
+            </geometry>
+
+            <origin xyz="0.1 0.0 0.05" rpy="0.0 0.0 0.0"/>
+        </collision>
+    </link>
+
+    <!-- Define Wheel -->
+    <xacro:macro name="wheel" params="name name_mesh ori_x ori_y ori_r axis_z scale mass">
+        <joint name="${name}_joint" type="continuous">
+            <parent link="base_link"/>
+            <child link="${name}_link"/>
+            <origin xyz="${ori_x} ${ori_y} 0.0" rpy="${ori_r} 0.0 0.0"/>
+            <axis xyz="0.0 0.0 ${axis_z}"/>
+        </joint>  
+
+        <link name="${name}_link"> 
+            <visual>
+                <geometry>
+                    <cylinder radius="0.03" length="0.015"/>
+                    <!-- <mesh filename="package://my_robot/meshes/${name_mesh}" scale="${scale} ${scale} ${scale}"/> -->
+                </geometry>
+
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+
+                <material name="red">
+                    <color rgba="1.0 0.0 0.0 1.0"/>
+                </material>
+            </visual>
+
+            <inertial>
+                <mass value="${mass}"/>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <inertia ixx="0.000975" ixy="0.0" ixz="0.0" iyy="0.000975" iyz="0.0" izz="0.0018"/>
+            </inertial>
+
+            <collision>
+                <geometry>
+                    <cylinder radius="0.03" length="0.015"/>
+                     <!-- <mesh filename="package://my_robot/meshes/left_tire.stl" scale="${scale} ${scale} ${scale}"/> -->
+                </geometry>
+
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            </collision>
+        </link>
+    </xacro:macro>
+
+    <!-- BACK LEFT WHEEL -->
+    <xacro:wheel name="back_left_wheel" name_mesh="left_tire.stl" 
+                ori_x="0.00" ori_y="0.08" ori_r="-1.57" 
+                axis_z="1.0" scale="0.002" mass="0.5"/>
+
+    <!-- BACK RIGHT WHEEL -->
+    <xacro:wheel name="back_right_wheel" name_mesh="left_tire.stl" 
+                ori_x="0.00" ori_y="-0.08" ori_r="1.57" 
+                axis_z="-1.0" scale="0.002" mass="0.5"/>
+
+    <!-- FRONT LEFT WHEEL -->
+    <xacro:wheel name="front_left_wheel" name_mesh="left_tire.stl" 
+                ori_x="0.10" ori_y="0.08" ori_r="-1.57" 
+                axis_z="1.0" scale="0.002" mass="0.5"/>
+
+    <!-- FRONT RIGHT WHEEL -->
+    <xacro:wheel name="front_right_wheel" name_mesh="left_tire.stl" 
+                ori_x="0.10" ori_y="-0.08" ori_r="1.57" 
+                axis_z="-1.0" scale="0.002" mass="0.5"/>
+
+    <!-- CASTER WHEEL
+    <xacro:property name="caster" value="caster_wheel"/>
+
+    <joint name="${caster}_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="${caster}_link"/>
+        <origin xyz="0.3 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <link name="${caster}_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <sphere radius="0.025"/>
+            </geometry>
+            <material name="black">
+                <color rgba="0.05 0.05 0.05 1.0"/>
+            </material>
+        </visual>
+
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <mass value="0.5"/>
+            <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+        </inertial>
+
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <sphere radius="0.025"/>
+            </geometry>
+            <material name="black">
+                <color rgba="0.05 0.05 0.05 1.0"/>
+            </material>
+        </collision>
+    </link> -->
+
+    <!-- Transmission -->
+    <!-- <transmission name="back_left_wheel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="back_left_wheel_joint">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor1">
+            <mechanicalReduction>1.0</mechanicalReduction>
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+
+    <transmission name="back_right_wheel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="back_right_wheel_joint">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor2">
+            <mechanicalReduction>1.0</mechanicalReduction>
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+
+    <transmission name="front_left_wheel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="front_left_wheel_joint">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor3">
+            <mechanicalReduction>1.0</mechanicalReduction>
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+    
+    <transmission name="front_right_wheel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="front_right_wheel_joint">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor4">
+            <mechanicalReduction>1.0</mechanicalReduction>
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/my_diffbot</robotNamespace>
+        </plugin>
+    </gazebo> -->
+
+    <xacro:include filename="gazebo.xacro"/>
+    <xacro:include filename="gazebo_controll.xacro"/>
+    <xacro:include filename="lidar.xacro"/> 
+    <xacro:include filename="depth_camera.xacro"/>
+    <xacro:include filename="camera.xacro"/> 
+    
+</robot>

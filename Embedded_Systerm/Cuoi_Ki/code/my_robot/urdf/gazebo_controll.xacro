@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot_name">
+
+    <gazebo>    
+        <plugin name="robot_controller" filename="libgazebo_ros_planar_move.so">
+
+            <!-- Rate -->
+            <alwaysOn>true</alwaysOn>
+            <updateRate>40</updateRate>
+
+            <!-- Wheel Information -->
+            <leftFrontJoint>front_left_wheel_joint</leftFrontJoint>
+            <rightFrontJoint>front_right_wheel_joint</rightFrontJoint>
+            <leftBackJoint>back_left_wheel_joint</leftBackJoint>
+            <rightBackJoint>back_right_wheel_joint</rightBackJoint>
+            <wheelSeparation>0.145</wheelSeparation>
+            <wheelDiameter>0.06</wheelDiameter>
+
+            <!-- Limits -->
+            <max_wheel_torque>200</max_wheel_torque>
+            <max_wheel_acceleration>10.0</max_wheel_acceleration>
+
+            <!-- Odom Output -->
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <odometryRate>30.0</odometryRate>
+            <robotBaseFrame>base_link</robotBaseFrame>
+
+            <publish_odom>true</publish_odom>
+            <publish_odom_tf>true</publish_odom_tf>
+            <publish_wheel_tf>true</publish_wheel_tf>
+        </plugin>
+    </gazebo>
+</robot>

@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<launch>
+    <arg name="model" />
+    <param name="robot_description" command="xacro '$(find my_robot)/urdf/my_robot.urdf.xacro'" />
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />	
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find my_robot)/worlds/autorace_2020.world"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <arg name="x_pos" default="0.7"/>
+    <arg name="y_pos" default="-1.75"/>
+    <arg name="z_pos" default="0"/>
+    <arg name="roll" default="0"/>
+    <arg name="pitch" default="0"/>
+    <arg name="yaw" default="0"/>
+
+    <node name="gazebo_ros" pkg="gazebo_ros" type="spawn_model" args="-urdf -model my_robot 
+    -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -R $(arg roll) 
+    -P $(arg pitch) -Y $(arg yaw)"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find my_robot)/urdf.rviz" required="true"/>
+</launch>
